@@ -13,7 +13,7 @@ export const fetchVideos = createAsyncThunk("videos/fetchVideos", async () => {
   return videos;
 });
 
-const videoSloice = createSlice({
+const videosSloice = createSlice({
   name: "videos",
   initialState,
   extraReducers: (builder) => {
@@ -35,4 +35,4 @@ const videoSloice = createSlice({
   },
 });
 
-export default videoSloice.reducer;
+export default videosSloice.reducer;
