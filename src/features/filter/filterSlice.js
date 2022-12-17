@@ -1,38 +1,29 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getVideo } from "./videoAPI";
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  video: {},
-  isLoading: false,
-  isError: false,
-  error: "",
+    tags: [],
+    search: '',
 };
 
-export const fetchVideo = createAsyncThunk("video/fetchVideo", async (id) => {
-  const video = await getVideo(id);
-  return video;
+const filterSlice = createSlice({
+    name: "video",
+    initialState,
+    reducers: {
+        tagSelected: (state, action) => {
+            state.tags.push(action.payload)
+        },
+        tagRemoved: (state, action) => {
+            const indexToRemove = state.tags.indexOf(action.payload);
+
+            if (indexToRemove !== -1) {
+                state.tags.splice(indexToRemove, 1);
+            }
+        },
+        searched: (state, action) => {
+            state.search = action.payload;
+        }
+    }
 });
 
-const videoSloice = createSlice({
-  name: "video",
-  initialState,
-  extraReducers: (builder) => {
-    builder
-      .addCase(fetchVideo.pending, (state) => {
-        state.isError = false;
-        state.isLoading = true;
-      })
-      .addCase(fetchVideo.fulfilled, (state, action) => {
-        state.isLoading = false;
-        state.video = action.payload;
-      })
-      .addCase(fetchVideo.rejected, (state, action) => {
-        state.isLoading = false;
-        state.video = {};
-        state.isError = true;
-        state.error = action.error?.message;
-      });
-  },
-});
-
-export default videoSloice.reducer;
+export default filterSlice.reducer;
+export const { searched, tagRemoved, tagSelected } = filterSlice.actions;
